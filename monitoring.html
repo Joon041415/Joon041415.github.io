@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT 인프라 모니터링 핵심 가이드</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2, h3, h4 {
+            color: #2c3e50;
+        }
+        h1 {
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+        h2 {
+            margin-top: 30px;
+        }
+        hr {
+            border: 0;
+            height: 1px;
+            background: #eee;
+            margin: 20px 0;
+        }
+        ul {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+        pre {
+            background-color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        code {
+            font-family: "Courier New", Courier, monospace;
+            color: #34495e;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>IT 인프라 모니터링 핵심 가이드</h1>
+    <hr>
+
+    <h2>1. 모니터링 관련 서적의 핵심 주제</h2>
+    <p>모니터링 관련 서적들은 '무엇을, 왜, 어떻게' 모니터링할 것인가에 대한 철학과 기술을 다룹니다. 핵심 주제는 다음과 같이 정리할 수 있습니다.</p>
+    <ul>
+        <li><b>모니터링 원칙</b>: 단순히 수치를 보는 것을 넘어, 시스템의 상태를 이해하고 비정상적인 상황을 예측하는 데 초점을 맞춥니다.</li>
+        <li><b>관찰성(Observability)</b>: 모니터링에서 한 단계 더 나아가, 시스템 내부의 동작을 추론하고 문제의 근본 원인을 파악하는 능력.</li>
+        <li><b>핵심 지표(Metrics)</b>: 시스템의 상태를 측정하는 수치. 'USE(Utilization, Saturation, Errors)' 및 'RED(Rate, Errors, Duration)' 원칙이 자주 사용됩니다.</li>
+        <li><b>로그 및 트레이싱</b>: 이벤트 기록을 분석하고, 분산 시스템에서 요청의 흐름을 추적하여 문제를 진단합니다.</li>
+        <li><b>알림(Alerting)</b>: 정의된 지표가 임계치를 넘었을 때 관리자에게 통보하여 즉각적인 대응을 가능하게 합니다.</li>
+    </ul>
+
+    <hr>
+
+    <h2>2. 핵심 주제별 설명 및 주요 키워드</h2>
+    <ul>
+        <li><b>메트릭(Metrics)</b>: 시스템의 자원 사용량이나 성능을 측정하는 수치 데이터.
+            <ul>
+                <li><b>CPU Utilization</b>: CPU가 작업을 처리하는 데 사용되는 비율.</li>
+                <li><b>Memory Usage</b>: 시스템 메모리 사용량.</li>
+                <li><b>Latency</b>: 특정 작업이 시작된 후 완료되기까지 걸리는 시간.</li>
+                <li><b>Throughput</b>: 단위 시간당 처리되는 작업량.</li>
+            </ul>
+        </li>
+        <li><b>로그(Logs)</b>: 애플리케이션이나 시스템에서 발생하는 이벤트에 대한 시계열 기록.
+            <ul>
+                <li><b>오류 로그(Error Logs)</b>: 애플리케이션의 비정상 종료나 예외 상황을 기록.</li>
+                <li><b>액세스 로그(Access Logs)</b>: 웹 서버에 접속한 사용자의 요청 정보를 기록.</li>
+                <li><b>Syslog</b>: 시스템의 전반적인 상태와 이벤트를 기록.</li>
+            </ul>
+        </li>
+        <li><b>트레이싱(Tracing)</b>: 분산 시스템에서 단일 요청이 여러 서비스를 거치는 과정을 추적하여 병목 현상을 파악.
+            <ul>
+                <li><b>스팬(Span)</b>: 트레이스 내에서 개별 작업을 나타내는 단위.</li>
+                <li><b>트레이스 ID(Trace ID)</b>: 단일 요청의 전체 흐름을 식별하는 고유 ID.</li>
+            </ul>
+        </li>
+        <li><b>알림(Alerting)</b>: 설정된 규칙에 따라 문제가 발생했을 때 알림을 보내는 기능.
+            <ul>
+                <li><b>임계치(Threshold)</b>: 알림을 발생시키는 기준이 되는 값 (예: CPU 사용량 90% 이상).</li>
+                <li><b>채널(Channel)</b>: 알림을 받는 통로 (예: 이메일, Slack, PagerDuty).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <hr>
+
+    <h2>3. 주요 사용 도구별 구체적인 사용 예제</h2>
+    <p>가장 널리 사용되는 모니터링 툴인 Prometheus, Grafana, Zabbix, 그리고 로그 분석을 위한 ELK Stack을 중심으로 자세한 예제를 제시합니다.</p>
+
+    <h3>1) Prometheus (메트릭 수집 및 저장)</h3>
+    <p>Prometheus는 풀(Pull) 방식을 사용하는 메트릭 모니터링 시스템입니다. <code>prometheus.yml</code> 파일을 통해 설정합니다.</p>
+    
+    <h4>시나리오 1: 로컬 서버의 CPU/메모리/네트워크 모니터링</h4>
+    <p><strong>준비</strong>: 모니터링할 서버에 <code>node_exporter</code>를 설치하여 메트릭을 노출시킵니다.</p>
+    <p><strong>설정 파일 (<code>prometheus.yml</code>)</strong>:</p>
+    <pre><code># prometheus.yml 파일 전체
+# ====================================================================
+
+global:
+  scrape_interval: 15s # 15초마다 메트릭을 수집하도록 설정합니다.
+  evaluation_interval: 15s # 15초마다 알림 규칙을 평가합니다.
+
+scrape_configs:
+  - job_name: 'node_exporter' # 이 수집 작업의 이름을 node_exporter로 지정합니다.
+    static_configs:
+      - targets: ['localhost:9100'] # node_exporter가 설치된 로컬 서버의 주소를 명시합니다.
+</code></pre>
+
+    <h4>시나리오 2: PromQL 쿼리를 이용한 데이터 분석</h4>
+    <ul>
+        <li><strong>예제 1: 지난 5분간의 평균 CPU 사용량 조회</strong>
+            <pre><code># sum(rate(...))는 단위 시간당 변화율을 계산
+# irate(...)는 직전 두 개의 데이터 포인트 변화율을 계산하여 급격한 변화를 빠르게 감지
+sum(rate(node_cpu_seconds_total{mode="idle"}[5m]))
+</code></pre>
+        </li>
+        <li><strong>예제 2: 전체 메모리 대비 사용 중인 메모리 비율 조회</strong>
+            <pre><code># (총 메모리 - 사용 가능한 메모리) / 총 메모리 * 100
+(node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100
+</code></pre>
+        </li>
+        <li><strong>예제 3: 네트워크 인터페이스로 들어오는 트래픽 양(바이트/초)</strong>
+            <pre><code># rate(...) 함수를 사용해 지난 1분간의 트래픽 변화율을 측정
+rate(node_network_receive_bytes_total{device="eth0"}[1m])
+</code></pre>
+        </li>
+    </ul>
+
+    <h4>시나리오 3: CPU 사용량 임계치 초과 시 알림 설정</h4>
+    <p><strong>설정 파일 (<code>alert.rules.yml</code>)</strong>:</p>
+    <pre><code># alert.rules.yml 파일 전체
+# ====================================================================
+
+groups:
+- name: ServerAlerts
+  rules:
+  - alert: HighCpuUsage # 알림 이름
+    expr: 100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 90
+    for: 5m # 조건이 5분 동안 지속되면 알림 발생
+    labels:
+      severity: critical
+    annotations:
+      summary: "High CPU Usage on {{ $labels.instance }}" # 알림 제목
+      description: "CPU usage is above 90% for the last 5 minutes on {{ $labels.instance }}" # 알림 내용
+</code></pre>
+
+    <h3>2) Grafana (시각화 대시보드)</h3>
+    <p>Grafana는 다양한 데이터 소스를 연결하여 시각적인 대시보드를 생성하는 데 특화된 툴입니다.</p>
+
+    <h4>시나리오 1: Prometheus 데이터 소스 연결</h4>
+    <p><strong>과정</strong>: Grafana 웹 UI에 접속 → Configuration(설정) 메뉴 → Data Sources(데이터 소스) → Add data source → Prometheus 선택 → <code>http://localhost:9090</code> (Prometheus 서버 주소) 입력 후 Save & Test.</p>
+    <p><strong>결과</strong>: Grafana가 Prometheus 서버로부터 메트릭 데이터를 가져올 수 있게 됩니다.</p>
+
+    <h4>시나리오 2: 서버 CPU 사용량 대시보드 만들기</h4>
+    <p><strong>과정</strong>: Dashboards 메뉴 → New dashboard → Add new panel → Edit Panel에서 Data source를 Prometheus로 선택 → PromQL 쿼리 입력.</p>
+    <p><strong>쿼리</strong>:</p>
+    <pre><code>100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)
+</code></pre>
+    <p><strong>결과</strong>: 위 쿼리가 반환하는 CPU 사용률 그래프가 생성됩니다.</p>
+
+    <h4>시나리오 3: 동적 대시보드를 위한 템플릿 변수 설정</h4>
+    <p><strong>과정</strong>: Dashboard Settings(대시보드 설정) → Variables(변수) → Add variable → Name을 <code>server</code>로 지정 → Query에 <code>label_values(node_cpu_seconds_total, instance)</code> 입력.</p>
+    <p><strong>결과</strong>: 대시보드 상단에 서버 목록을 드롭다운 형태로 선택할 수 있는 메뉴가 생겨, 한 번 만든 대시보드로 여러 서버를 모니터링할 수 있습니다.</p>
+
+    <h3>3) Zabbix (올인원 모니터링 솔루션)</h3>
+    <p>Zabbix는 에이전트 기반의 강력한 올인원 모니터링 툴로, 호스트 추가부터 알림까지 한 번에 관리할 수 있습니다.</p>
+
+    <h4>시나리오 1: 새로운 호스트(서버) 추가</h4>
+    <p><strong>과정</strong>: Configuration(설정) → Hosts(호스트) → Create host → Host name, IP 주소 입력 → Groups(그룹) 지정 → Templates(템플릿)에서 <code>Template OS Linux</code> 연결.</p>
+    <p><strong>결과</strong>: Zabbix 에이전트가 설치된 리눅스 서버에 대한 기본적인 CPU/메모리/네트워크 모니터링이 자동으로 시작됩니다.</p>
+
+    <h4>시나리오 2: 웹 서버(Nginx) 다운 시 알림 트리거 설정</h4>
+    <p><strong>과정</strong>: Configuration → Hosts → 해당 호스트 선택 → Triggers(트리거) → Create trigger → Name 입력.</p>
+    <p><strong>조건(Expression)</strong>:</p>
+    <pre><code># {호스트명:항목.함수(파라미터)} = 임계치
+{your-nginx-server:net.tcp.service[http].last()}=0
+# 위의 트리거는 'your-nginx-server'의 80번 포트(http) 서비스가 가장 최근에 0(다운) 상태일 때 트리거를 발생시킵니다.
+</code></pre>
+    <p><strong>결과</strong>: Nginx 서비스가 중단되면 Zabbix가 이를 감지하고 설정된 알림 채널로 통보합니다.</p>
+
+    <h3>4) ELK Stack (로그 관리)</h3>
+    <p>Elasticsearch(저장), Logstash(수집/변환), Kibana(시각화)로 구성된 스택입니다.</p>
+    
+    <h4>시나리오 1: Filebeat를 이용한 로그 수집</h4>
+    <p><strong>준비</strong>: 로그가 있는 서버에 <code>Filebeat</code> 설치.</p>
+    <p><strong>설정 파일 (<code>filebeat.yml</code>)</strong>:</p>
+    <pre><code># filebeat.yml 파일 전체
+# ====================================================================
+
+# Nginx 모듈 활성화
+filebeat.modules:
+- module: nginx
+  access:
+    enabled: true
+  error:
+    enabled: true
+
+output.elasticsearch: # 수집한 로그를 보낼 곳을 Elasticsearch로 지정
+  hosts: ["localhost:9200"] # Elasticsearch 서버 주소
+</code></pre>
+    <p><strong>결과</strong>: Filebeat가 Nginx의 액세스 및 오류 로그를 자동으로 수집하여 Elasticsearch로 전송합니다.</p>
+
+    <h4>시나리오 2: Kibana에서 로그 검색 및 분석</h4>
+    <p><strong>과정</strong>: Kibana 웹 UI 접속 → Discover 메뉴 → 검색창에 쿼리 입력.</p>
+    <ul>
+        <li><strong>예제 1: 지난 24시간 동안 발생한 모든 오류 로그 검색</strong>
+            <pre><code>nginx.error.message:"*"
+</code></pre>
+        </li>
+        <li><strong>예제 2: 특정 IP 주소(1.2.3.4)로부터 온 요청 검색</strong>
+            <pre><code>client.ip: "1.2.3.4"
+</code></pre>
+        </li>
+        <li><strong>예제 3: 응답 코드가 500(서버 에러)인 요청 검색</strong>
+            <pre><code>response.status: 500
+</code></pre>
+        </li>
+    </ul>
+
+</div>
+
+</body>
+</html>
