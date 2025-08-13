@@ -76,6 +76,38 @@
         }
         @media (min-width: 768px) {
             .chart-container { height: 350px; }
+                body {
+                flex-direction: column; /* 세로(column) 정렬로 변경 */
+            }
+
+            .sidebar {
+                width: 100%; /* 너비를 전체로 확장 */
+                height: auto; /* 높이를 콘텐츠에 맞게 조정 */
+                position: static; /* 스크롤에 따라 이동하도록 변경 */
+                padding: 1rem 0; /* 상단 패딩만 조정 */
+            }
+
+            .sidebar h1 {
+                text-align: center;
+                margin-bottom: 1rem;
+            }
+
+            #desktop-nav {
+                display: flex; /* 메뉴 항목들을 가로로 나란히 배치 */
+                flex-wrap: wrap; /* 항목이 많아지면 자동으로 다음 줄로 넘어가도록 설정 */
+                justify-content: center; /* 항목들을 가운데 정렬 */
+                gap: 0.5rem; /* 항목 간 간격 설정 */
+                padding: 0 1rem;
+            }
+            
+            .nav-link {
+                display: inline-block; /* 링크를 가로로 나열 */
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+        }
         }
         html { scroll-behavior: smooth; }
     </style>
@@ -92,6 +124,8 @@
                 <a href="#documentation" class="nav-link">5. 문서화</a>
                 <a href="#appendix" class="nav-link">6. 첨부 자료</a>
                 <a href="index2.html" class="nav-link">7. 2번 가이드</a>
+                <a href="monitoring.html" class="nav-link">8. 모니터링 심화</a>
+
             </nav>
         </aside>
 
