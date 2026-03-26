@@ -45,4 +45,121 @@
         header p { color: #64748b; font-size: 1.1rem; }
 
         section { margin-bottom: 4rem; scroll-margin-top: 2rem; }
-        h3 { font-size: 1.5rem; margin-bottom: 1.5rem; padding-left: 10px; border-left: 4px solid var
+        h3 { font-size: 1.5rem; margin-bottom: 1.5rem; padding-left: 10px; border-left: 4px solid var(--primary-color); }
+
+        /* 카드 그리드 레이아웃 */
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+        .card { background: var(--card-bg); padding: 1.5rem; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .card h4 { margin-bottom: 0.8rem; color: var(--primary-color); }
+
+        /* 코드 블록 스타일 */
+        pre {
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 1.2rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Consolas', monospace;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        /* 프로세스 단계 스타일 */
+        .steps { display: flex; gap: 1rem; margin-top: 1.5rem; }
+        .step { flex: 1; text-align: center; background: #eff6ff; padding: 1rem; border-radius: 8px; border: 1px solid #dbeafe; }
+        .step-num { display: block; font-weight: bold; color: var(--primary-color); margin-bottom: 5px; }
+
+        /* 푸터 */
+        footer { margin-top: 5rem; padding-top: 2rem; border-top: 1px solid #e2e8f0; color: #94a3b8; font-size: 0.85rem; }
+
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            nav { width: 100%; height: auto; position: relative; }
+            main { margin-left: 0; padding: 1.5rem; }
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <h1>Infra Dashboard</h1>
+        <ul>
+            <li><a href="#overview">1. 개요</a></li>
+            <li><a href="#infra-mgmt">2. 인프라 관리</a></li>
+            <li><a href="#device-mgmt">3. 기기 관리</a></li>
+            <li><a href="#security-mgmt">4. 보안 관리</a></li>
+            <li><a href="#documentation">5. 문서화</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <header id="overview">
+            <h2>IT 인프라 관리 대시보드</h2>
+            <p>비즈니스 연속성을 위한 체계적인 시스템 운영 및 보안 가이드입니다.</p>
+        </header>
+
+        <section id="infra-mgmt">
+            <h3>2. 네트워크 및 서버 인프라 관리</h3>
+            <div class="grid">
+                <div class="card">
+                    <h4>실시간 모니터링</h4>
+                    <p>Prometheus와 Grafana를 활용하여 서버 메트릭을 시각화하고 가용성을 확보합니다.</p>
+                </div>
+                <div class="card">
+                    <h4>로그 분석 (ELK)</h4>
+                    <p>Elasticsearch, Logstash, Kibana 스택을 통해 대규모 로그를 수집 및 분석합니다.</p>
+                </div>
+            </div>
+<pre>
+# logstash.conf 예시
+filter {
+  grok {
+    match => { "message" => "%{COMBINEDAPACHELOG}" }
+  }
+}
+</pre>
+        </section>
+
+        <section id="device-mgmt">
+            <h3>3. 사내 기기 관리</h3>
+            <div class="grid">
+                <div class="card">
+                    <h4>Windows (SCCM)</h4>
+                    <p>대규모 환경에서의 소프트웨어 배포 및 업데이트를 자동화합니다.</p>
+                </div>
+                <div class="card">
+                    <h4>macOS (JAMF)</h4>
+                    <p>Apple 기기 전용 정책 수립 및 보안 설정을 관리합니다.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="security-mgmt">
+            <h3>4. 장애 대응 프로세스</h3>
+            <div class="steps">
+                <div class="step"><span class="step-num">1</span>감지 및 대응</div>
+                <div class="step"><span class="step-num">2</span>원인 분석</div>
+                <div class="step"><span class="step-num">3</span>복구 작업</div>
+                <div class="step"><span class="step-num">4</span>사후 조치</div>
+            </div>
+        </section>
+
+        <section id="documentation">
+            <h3>5. 문서화 및 커뮤니케이션</h3>
+<pre>
+## 장애 대응 보고서 양식
+- 발생 시간: 2024-XX-XX
+- 장애 원인: DB 커넥션 풀 고갈
+- 조치 내용: 서버 자원 증설 및 재시작
+</pre>
+        </section>
+
+        <footer>
+            <p>Professional CSM | Tech Sales</p>
+            <p>Contact: lotus031315@gmail.com</p>
+        </footer>
+    </main>
+
+</body>
+</html>
