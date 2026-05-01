@@ -3,163 +3,318 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IT 인프라 관리 대시보드</title>
+    <title>IT Infra Management Dashboard</title>
+    <!-- Pretendard 폰트 적용 (CDN) -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
     <style>
         :root {
-            --primary-color: #2563eb;
-            --bg-color: #f8fafc;
-            --text-color: #1e293b;
-            --sidebar-width: 260px;
+            --primary: #3b82f6; /* Blue */
+            --primary-dark: #2563eb;
+            --bg-main: #f1f5f9;
+            --bg-sidebar: #0f172a;
+            --text-main: #334155;
+            --text-light: #94a3b8;
             --card-bg: #ffffff;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --sidebar-width: 280px;
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Pretendard', sans-serif; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; display: flex; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', -apple-system, sans-serif; }
+        body { background-color: var(--bg-main); color: var(--text-main); display: flex; min-height: 100vh; overflow-x: hidden; }
 
-        /* 사이드바 스타일 */
+        /* --- 사이드바 --- */
         nav {
             width: var(--sidebar-width);
-            height: 100vh;
-            background: #1e293b;
-            color: white;
-            position: fixed;
+            background-color: var(--bg-sidebar);
+            color: #f8fafc;
+            display: flex;
+            flex-direction: column;
             padding: 2rem 1.5rem;
-            overflow-y: auto;
+            position: fixed;
+            height: 100vh;
+            transition: transform 0.3s ease;
+            z-index: 100;
         }
-        nav h1 { font-size: 1.2rem; margin-bottom: 2rem; color: #38bdf8; border-bottom: 1px solid #334155; padding-bottom: 1rem; }
-        nav ul { list-style: none; }
-        nav ul li { margin-bottom: 0.8rem; }
-        nav ul li a { color: #cbd5e1; text-decoration: none; font-size: 0.95rem; transition: 0.3s; }
-        nav ul li a:hover { color: white; padding-left: 5px; }
-
-        /* 메인 콘텐츠 스타일 */
-        main {
-            margin-left: var(--sidebar-width);
-            flex: 1;
-            padding: 3rem;
-            max-width: 1000px;
+        nav .logo { font-size: 1.5rem; font-weight: 800; color: white; margin-bottom: 3rem; display: flex; align-items: center; gap: 10px; }
+        nav .logo-icon { width: 32px; height: 32px; background: var(--primary); border-radius: 8px; display: grid; place-items: center; font-weight: bold; font-size: 1.2rem; }
+        
+        nav ul { list-style: none; flex-grow: 1; }
+        nav ul li { margin-bottom: 0.75rem; }
+        nav ul li a {
+            display: flex; align-items: center; gap: 12px;
+            color: #cbd5e1; text-decoration: none; padding: 0.8rem 1rem; border-radius: 8px; transition: 0.2s; font-size: 0.95rem;
         }
+        nav ul li a:hover { background-color: rgba(255,255,255,0.05); color: white; }
+        nav ul li a.active { background-color: var(--primary); color: white; font-weight: 600; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); }
 
-        header { margin-bottom: 3rem; }
-        header h2 { font-size: 2.2rem; margin-bottom: 1rem; color: #0f172a; }
-        header p { color: #64748b; font-size: 1.1rem; }
+        nav .profile { margin-top: auto; padding-top: 2rem; border-top: 1px solid #334155; display: flex; align-items: center; gap: 12px; }
+        nav .profile-img { width: 40px; height: 40px; background: #64748b; border-radius: 50%; display: grid; place-items: center; font-weight: bold; color: white;}
+        nav .profile-info .name { font-weight: 600; color: white; font-size: 0.9rem; }
+        nav .profile-info .email { color: var(--text-light); font-size: 0.8rem; }
 
-        section { margin-bottom: 4rem; scroll-margin-top: 2rem; }
-        h3 { font-size: 1.5rem; margin-bottom: 1.5rem; padding-left: 10px; border-left: 4px solid var(--primary-color); }
+        /* --- 메인 콘텐츠 --- */
+        main { flex: 1; margin-left: var(--sidebar-width); padding: 2rem 3rem; width: calc(100% - var(--sidebar-width)); }
 
-        /* 카드 그리드 레이아웃 */
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
-        .card { background: var(--card-bg); padding: 1.5rem; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
-        .card h4 { margin-bottom: 0.8rem; color: var(--primary-color); }
+        header { margin-bottom: 2.5rem; display: flex; justify-content: space-between; align-items: center; }
+        header h1 { font-size: 2rem; font-weight: 800; color: #0f172a; }
+        header .p-desc { color: var(--text-light); margin-top: 0.2rem; }
+        header .header-btns { display: flex; gap: 10px; }
+        header button { padding: 0.6rem 1.2rem; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; font-size: 0.9rem; transition: 0.2s; }
+        header .btn-secondary { background: #e2e8f0; color: #475569; }
+        header .btn-secondary:hover { background: #cbd5e1; }
+        header .btn-primary { background: var(--primary); color: white; }
+        header .btn-primary:hover { background: var(--primary-dark); }
 
-        /* 코드 블록 스타일 */
-        pre {
-            background: #0f172a;
-            color: #e2e8f0;
-            padding: 1.2rem;
-            border-radius: 8px;
-            overflow-x: auto;
-            font-family: 'Consolas', monospace;
-            font-size: 0.9rem;
-            margin-top: 1rem;
+        section { margin-bottom: 3rem; scroll-margin-top: 2rem; }
+        .section-header { margin-bottom: 1.5rem; }
+        .section-header h2 { font-size: 1.5rem; color: #1e293b; position: relative; padding-left: 15px; }
+        .section-header h2::before { content:''; position: absolute; left: 0; top: 4px; bottom: 4px; width: 4px; background: var(--primary); border-radius: 2px; }
+
+        /* --- 대시보드 그리드 & 카드 --- */
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+
+        .card { background: var(--card-bg); padding: 1.8rem; border-radius: 16px; box-shadow: var(--shadow-md); border: 1px solid #e2e8f0; transition: transform 0.2s, box-shadow 0.2s; }
+        .card:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08); }
+        .card-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 1.2rem; }
+        .card-title { font-size: 1.1rem; font-weight: 700; color: #1e293b; }
+        .card-icon { color: var(--primary); font-size: 1.4rem; opacity: 0.7; }
+        .card-value { font-size: 2.2rem; font-weight: 800; color: #0f172a; margin-bottom: 0.3rem; }
+        .card-subtext { font-size: 0.85rem; color: var(--text-light); }
+        .trend { font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+        .trend.up { color: var(--success); }
+        .trend.down { color: var(--danger); }
+
+        /* --- 시각화 요소 (CSS Charts) --- */
+        .chart-placeholder { height: 120px; background: #f8fafc; border-radius: 8px; margin-top: 1rem; display: flex; align-items: flex-end; padding: 10px; gap: 5px; border: 1px dashed #e2e8f0; }
+        
+        /* Mini Bar Chart */
+        .mini-bar { flex: 1; background: #e2e8f0; border-radius: 4px; transition: height 0.5s ease; position: relative; cursor: pointer;}
+        .mini-bar:hover { background: var(--primary); }
+        .mini-bar:hover::after { content: attr(data-value); position: absolute; top: -25px; left: 50%; transform: translateX(-50%); background: #1e293b; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem;}
+        
+        /* State Indicators */
+        .status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+        .status-online { background: #ecfdf5; color: var(--success); }
+        .status-warning { background: #fffbeb; color: var(--warning); }
+        .status-offline { background: #fef2f2; color: var(--danger); }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+
+        /* Donut Chart CSS */
+        .donut-chart-box { display: flex; justify-content: center; align-items: center; position: relative; height: 160px; }
+        .donut-chart { width: 130px; height: 130px; border-radius: 50%; background: conic-gradient(var(--primary) 0% 70%, #e2e8f0 70% 100%); display: grid; place-items: center; }
+        .donut-chart::before { content: ""; position: absolute; width: 90px; height: 90px; background: white; border-radius: 50%; }
+        .donut-center-text { position: absolute; text-align: center; }
+        .donut-percent { font-size: 1.8rem; font-weight: 800; color: #0f172a; }
+        .donut-label { font-size: 0.8rem; color: var(--text-light); }
+
+        /* --- 리스트 및 기타 --- */
+        .data-list { list-style: none; margin-top: 1rem; }
+        .data-list li { display: flex; justify-content: space-between; padding: 0.8rem 0; border-bottom: 1px solid #f1f5f9; font-size: 0.9rem;}
+        .data-list li:last-child { border-bottom: none; }
+        .data-label { color: var(--text-light); }
+        .data-value-s { font-weight: 600; color: #1e293b; }
+
+        /* 반응형 */
+        @media (max-width: 1200px) {
+            .grid-3 { grid-template-columns: repeat(2, 1fr); }
         }
-
-        /* 프로세스 단계 스타일 */
-        .steps { display: flex; gap: 1rem; margin-top: 1.5rem; }
-        .step { flex: 1; text-align: center; background: #eff6ff; padding: 1rem; border-radius: 8px; border: 1px solid #dbeafe; }
-        .step-num { display: block; font-weight: bold; color: var(--primary-color); margin-bottom: 5px; }
-
-        /* 푸터 */
-        footer { margin-top: 5rem; padding-top: 2rem; border-top: 1px solid #e2e8f0; color: #94a3b8; font-size: 0.85rem; }
-
-        @media (max-width: 768px) {
-            body { flex-direction: column; }
-            nav { width: 100%; height: auto; position: relative; }
-            main { margin-left: 0; padding: 1.5rem; }
-            .grid { grid-template-columns: 1fr; }
+        @media (max-width: 992px) {
+            nav { transform: translateX(-100%); width: 240px;}
+            nav.open { transform: translateX(0); }
+            main { margin-left: 0; width: 100%; padding: 1.5rem; }
+            .grid-3, .grid-2 { grid-template-columns: 1fr; }
+            .mobile-toggle { display: block !important; position: fixed; top: 1.5rem; right: 1.5rem; background: var(--primary); color: white; padding: 0.5rem; border-radius: 8px; cursor: pointer; z-index: 101;}
         }
+        .mobile-toggle { display: none; }
+
     </style>
 </head>
 <body>
 
-    <nav>
-        <h1>Infra Dashboard</h1>
+    <!-- 모바일 토글 버튼 -->
+    <div class="mobile-toggle" onclick="toggleSidebar()">☰</div>
+
+    <!-- 사이드바 -->
+    <nav id="sidebar">
+        <div class="logo">
+            <div class="logo-icon">I</div>
+            Infra Manager
+        </div>
         <ul>
-            <li><a href="#overview">1. 개요</a></li>
-            <li><a href="#infra-mgmt">2. 인프라 관리</a></li>
-            <li><a href="#device-mgmt">3. 기기 관리</a></li>
-            <li><a href="#security-mgmt">4. 보안 관리</a></li>
-            <li><a href="#documentation">5. 문서화</a></li>
+            <li><a href="#overview" class="active">📊 요약 대시보드</a></li>
+            <li><a href="#servers">🖥️ 서버 상태</a></li>
+            <li><a href="#network">🌐 네트워크망</a></li>
+            <li><a href="#devices">📱 기기 관리</a></li>
+            <li><a href="#logs">📑 로그 분석</a></li>
+            <li><a href="#security">🔒 보안/장애대응</a></li>
         </ul>
+        <div class="profile">
+            <div class="profile-img">J</div>
+            <div class="profile-info">
+                <p class="name">Joon CSM</p>
+                <p class="email">lotus031315@gmail.com</p>
+            </div>
+        </div>
     </nav>
 
+    <!-- 메인 콘텐츠 -->
     <main>
         <header id="overview">
-            <h2>IT 인프라 관리 대시보드</h2>
-            <p>비즈니스 연속성을 위한 체계적인 시스템 운영 및 보안 가이드입니다.</p>
+            <div>
+                <h1>IT 인프라 요약</h1>
+                <p class="p-desc">시스템 전반의 실시간 가동 상태 및 주요 지표입니다.</p>
+            </div>
+            <div class="header-btns">
+                <button class="btn-secondary">보고서 내보내기</button>
+                <button class="btn-primary">+ 기기 추가</button>
+            </div>
         </header>
 
-        <section id="infra-mgmt">
-            <h3>2. 네트워크 및 서버 인프라 관리</h3>
-            <div class="grid">
+        <!-- 요약 섹션: Grid 3 -->
+        <section>
+            <div class="grid-3">
+                <!-- 카드 1: 전체 서버 상태 -->
                 <div class="card">
-                    <h4>실시간 모니터링</h4>
-                    <p>Prometheus와 Grafana를 활용하여 서버 메트릭을 시각화하고 가용성을 확보합니다.</p>
+                    <div class="card-header">
+                        <div class="card-title">운영 서버 가용성</div>
+                        <div class="status-badge status-online"><span class="status-dot"></span> 정상</div>
+                    </div>
+                    <div class="card-value">99.98%</div>
+                    <div class="trend up">▲ 0.01% (지난주 대비)</div>
+                    <div class="chart-placeholder mini-bar-chart" id="availabilityChart">
+                        <!-- JS로 바 차트 생성 -->
+                    </div>
                 </div>
+
+                <!-- 카드 2: 네트워크 트래픽 -->
                 <div class="card">
-                    <h4>로그 분석 (ELK)</h4>
-                    <p>Elasticsearch, Logstash, Kibana 스택을 통해 대규모 로그를 수집 및 분석합니다.</p>
+                    <div class="card-header">
+                        <div class="card-title">네트워크 트래픽 (In/Out)</div>
+                        <span class="card-icon">⚡</span>
+                    </div>
+                    <div class="card-value">2.1 GB/s</div>
+                    <div class="trend up">▲ 15% (현재 피크)</div>
+                    <div class="chart-placeholder">
+                        <div style="width:100%; height:80px; background: linear-gradient(90deg, rgba(59,130,246,0.2) 0%, rgba(59,130,246,0.6) 50%, rgba(59,130,246,0.2) 100%); border-radius: 4px; position:relative; overflow:hidden;">
+                            <div style="position:absolute; bottom:0; left:0; width:100%; height:100%; background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%233b82f6" fill-opacity="1" d="M0,160L48,176C96,192,192,224,288,224C384,224,480,192,576,165.3C672,139,768,117,864,128C960,139,1056,181,1152,192C1248,203,1344,181,1392,170.7L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') bottom; background-size: cover; "></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 카드 3: 관리 기기 현황 -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">관리 기기 비율</div>
+                        <span class="card-icon">💻</span>
+                    </div>
+                    <div class="donut-chart-box">
+                        <div class="donut-chart" style="background: conic-gradient(var(--primary) 0% 65%, #22d3ee 65% 90%, #e2e8f0 90% 100%);">
+                        </div>
+                        <div class="donut-center-text">
+                            <div class="donut-percent">342대</div>
+                            <div class="donut-label">전체</div>
+                        </div>
+                    </div>
+                    <div style="display:flex; justify-content:center; gap: 15px; font-size:0.8rem; margin-top:10px; color:var(--text-light)">
+                        <span><span style="color:var(--primary)">●</span> Windows (65%)</span>
+                        <span><span style="color:#22d3ee">●</span> macOS (25%)</span>
+                    </div>
                 </div>
             </div>
-<pre>
-# logstash.conf 예시
-filter {
-  grok {
-    match => { "message" => "%{COMBINEDAPACHELOG}" }
-  }
-}
-</pre>
         </section>
 
-        <section id="device-mgmt">
-            <h3>3. 사내 기기 관리</h3>
-            <div class="grid">
+        <!-- 세부 관리 섹션: Grid 2 -->
+        <section id="servers">
+            <div class="section-header">
+                <h2>세부 관리 인프라</h2>
+            </div>
+            <div class="grid-2">
+                <!-- 카드 4: 주요 서버 리스트 -->
                 <div class="card">
-                    <h4>Windows (SCCM)</h4>
-                    <p>대규모 환경에서의 소프트웨어 배포 및 업데이트를 자동화합니다.</p>
+                    <div class="card-header">
+                        <div class="card-title">주요 서버 가동 상태</div>
+                    </div>
+                    <ul class="data-list">
+                        <li>
+                            <span class="data-label">WEB-Production-01</span>
+                            <span class="status-badge status-online"><span class="status-dot"></span> 정상</span>
+                        </li>
+                        <li>
+                            <span class="data-label">DB-Master-Main</span>
+                            <span class="status-badge status-online"><span class="status-dot"></span> 정상</span>
+                        </li>
+                        <li>
+                            <span class="data-label">API-Gateway-Internal</span>
+                            <span class="status-badge status-warning"><span class="status-dot"></span> 부하 높음</span>
+                        </li>
+                        <li>
+                            <span class="data-label">Legacy-Mail-Server</span>
+                            <span class="status-badge status-offline"><span class="status-dot"></span> 점검중</span>
+                        </li>
+                    </ul>
                 </div>
-                <div class="card">
-                    <h4>macOS (JAMF)</h4>
-                    <p>Apple 기기 전용 정책 수립 및 보안 설정을 관리합니다.</p>
+
+                <!-- 카드 5: 미해결 이벤트 -->
+                <div class="card" style="border-left: 4px solid var(--danger);">
+                    <div class="card-header">
+                        <div class="card-title" style="color:var(--danger)">⚠️ 미해결 점검/장애 이벤트</div>
+                    </div>
+                    <div class="card-value" style="color:var(--danger)">3 건</div>
+                    <p class="card-subtext">시스템 운영에 영향을 줄 수 있는 이벤트입니다.</p>
+                    <ul class="data-list" style="margin-top: 1rem;">
+                        <li style="color:var(--danger); font-weight:600;">[장애] DB-Slave-02 커넥션 타임아웃</li>
+                        <li>[경고] WEB-01 CPU 사용률 90% 초과</li>
+                        <li>[알림] SSL 인증서 만료 7일 전 (VPN)</li>
+                    </ul>
                 </div>
             </div>
         </section>
 
-        <section id="security-mgmt">
-            <h3>4. 장애 대응 프로세스</h3>
-            <div class="steps">
-                <div class="step"><span class="step-num">1</span>감지 및 대응</div>
-                <div class="step"><span class="step-num">2</span>원인 분석</div>
-                <div class="step"><span class="step-num">3</span>복구 작업</div>
-                <div class="step"><span class="step-num">4</span>사후 조치</div>
-            </div>
-        </section>
-
-        <section id="documentation">
-            <h3>5. 문서화 및 커뮤니케이션</h3>
-<pre>
-## 장애 대응 보고서 양식
-- 발생 시간: 2024-XX-XX
-- 장애 원인: DB 커넥션 풀 고갈
-- 조치 내용: 서버 자원 증설 및 재시작
-</pre>
-        </section>
-
-        <footer>
-            <p>Professional CSM | Tech Sales</p>
-            <p>Contact: lotus031315@gmail.com</p>
-        </footer>
     </main>
 
+    <script>
+        // --- 더미 데이터 기반 비주얼 효과 (JS) ---
+
+        // 1. 미니 바 차트 생성 (가용성 카드)
+        function createMiniBarChart() {
+            const chart = document.getElementById('availabilityChart');
+            const data = [95, 98, 99, 99, 97, 100, 99, 98, 99, 100, 100, 99.98]; // 최근 12일 가용성
+            
+            data.forEach(value => {
+                const bar = document.createElement('div');
+                bar.className = 'mini-bar';
+                bar.style.height = (value - 90) * 10 + '%'; // 90%~100% 사이를 시각화
+                bar.setAttribute('data-value', value + '%');
+                chart.appendChild(bar);
+            });
+        }
+
+        // 2. 모바일 사이드바 토글
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // 3. 네비게이션 활성화 표시
+        const navLinks = document.querySelectorAll('nav ul li a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                navLinks.forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+                // 모바일에서 링크 클릭 시 사이드바 닫기
+                if(window.innerWidth <= 992) {
+                    toggleSidebar();
+                }
+            });
+        });
+
+        // 초기화
+        window.onload = function() {
+            createMiniBarChart();
+        };
+    </script>
 </body>
 </html>
